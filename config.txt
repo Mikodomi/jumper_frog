@@ -1,0 +1,7 @@
+frog_size 1
+car_length 1
+car_amount 5
+# map_height 0 by plansza byla na cala wysokosc ekranu (okna)
+map_height 0
+# podobnie z map_width
+map_width 0

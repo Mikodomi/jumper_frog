@@ -1,0 +1,21 @@
+#include <ncurses.h>
+#include "game.h"
+
+int main() {
+    initscr();
+    noecho();
+    curs_set(0);
+    start_color();
+    init_pair(1, COLOR_BLACK, COLOR_GREEN);
+
+    printw("colors please");
+    refresh();
+    Board map = init_game();
+    keypad(map.window, TRUE);
+    draw_board(&map);
+    wprintw(map.window, "frogger");
+    main_loop(&map);
+    wrefresh(map.window);
+    endwin();
+    return 0;
+}
