@@ -15,7 +15,7 @@ parseError frog_parse(Board* board, FILE* file) {
     while (fgets(buffer, 32, file)) {
         char command[32];
         int value;
-        sscanf(buffer,"%s %d", command, &value);
+        sscanf(buffer,"%s %d ", command, &value);
         if (strcmp(command, "size") == 0) {
             board->frog.size = value;
         }
@@ -31,7 +31,6 @@ parseError roads_parse(Board* board, FILE* file) {
     int amount;
     fscanf(file, "%d ", &amount);
     board->road_amount = amount;
-    wrefresh(board->window);
     board->roads = (Road*)malloc(amount*sizeof(Road));
     if (board->roads == NULL) return PARSE_BAD_MALLOC;
     for (int i = 0; i<amount; i++) {
@@ -64,6 +63,5 @@ void parse_config(Board* board) {
             roads_parse(board, file);
         }
     }
-    wprintw(board->window, "file parsing completed");
     fclose(file);
 }

@@ -3,8 +3,8 @@
 
 Board init_game() {
     Board map;
+    make_color_pairs();
     default_board(&map);
-    // parsing config functions will go here
     make_board_win(&map);
     return map;
 }
@@ -49,6 +49,7 @@ void main_loop(Board* board) {
         clear_frog(board);
         handle_movement(board, w);
         draw_roads(board);
+        draw_cars(board);
         draw_frog(board);
         wrefresh(board->window);
     } 

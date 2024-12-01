@@ -7,7 +7,8 @@ Move with w,a,s,d or k,h,j,l.
 # configuration
 Configuration is done through config.txt (has to be named __exactly__ that). 
 Every command like `FROG`, `ROADS` must be followed by a newline character.
-- ```ROADS
+- ```txt
+    ROADS
     n
     roads[0].posy roads[0].lanes
     roads[1].posy roads[1].lanes
