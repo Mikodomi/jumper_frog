@@ -10,10 +10,19 @@ typedef struct frog_t {
               // but size = 2 is 3x3, because the "radius" from the center is 2
 } Frog;
 
+typedef enum color_en {
+    BLACK,
+    GREEN,
+    RED,
+    BLUE,
+    YELLOW,
+} Color;
+
 typedef struct car_t {
     int posx;
-    int color;
+    Color color;
     int length;
+    int direction;
 } Car;
 
 typedef struct road_t {
@@ -50,6 +59,7 @@ void draw_roads(Board* board);
 // CAR FUNCTIONS
 
 void generate_cars(Board* board);
+void move_cars(Board* board);
 void clear_car(Board* board);
 void draw_cars(Board* board);
 
