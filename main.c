@@ -13,7 +13,7 @@ int main() {
     keypad(map.window, TRUE);
     draw_board(&map);
     main_loop(&map);
-    wrefresh(map.window);
+    free_board(&map);
     endwin();
     return 0;
 }

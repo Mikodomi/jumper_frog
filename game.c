@@ -44,9 +44,6 @@ void main_loop(Board* board) {
     draw_frog(board);
     wtimeout(board->window,16);
     int w;
-    Road testroad;
-    testroad.lanes = 3;
-    testroad.posy = 5;
     while (w != KEY_F(1)){
         w = wgetch(board->window);
         clear_frog(board);

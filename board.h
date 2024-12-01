@@ -23,7 +23,7 @@ typedef struct board_t {
     int car_amount;
     int car_length;
     int road_amount;
-    Road roads[1];
+    Road* roads;
 } Board;
 
 
@@ -44,6 +44,7 @@ void draw_roads(Board* board);
 void clear_car(Board* board);
 void draw_car(Board* board);
 
+void free_board(Board* board);
 
 
 #endif

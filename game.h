@@ -6,4 +6,5 @@ void draw_board(Board* board);
 Board init_game();
 void main_loop(Board* board);
 
+
 #endif

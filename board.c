@@ -1,9 +1,10 @@
 #include "board.h"
+#include "parsing.h"
 #include <ncurses.h>
 #include <stdlib.h>
 
-void make_roads(Board* board) {
-    
+void make_roads(Board* board) {    
+
 }
 
 void default_board(Board* board) {
@@ -14,9 +15,7 @@ void default_board(Board* board) {
     board->frog.posy = board->height-2;
     board->car_amount = 5;
     board->car_length = 3;
-    board->road_amount = 1;
-    board->roads[0].lanes = 3;
-    board->roads[0].posy = 15;
+    board->road_amount = 0;
 }
 
 //config functions here (none for now)
@@ -27,6 +26,7 @@ void default_board(Board* board) {
 
 void make_board_win(Board* board) {
     board->window = newwin(board->height, board->width, 0, 0);
+    parse_config(board);
 }
 
 void clear_frog(Board* board) {
@@ -68,3 +68,6 @@ void draw_car(Board* board) {
     
 }
 
+void free_board(Board* board) {
+    free(board->roads);
+}
