@@ -13,6 +13,7 @@ void default_board(Board* board) {
     board->car_amount = 5;
     board->car_length = 3;
     board->road_amount = 0;
+    board->tick_speed = 3;
 }
 
 //config functions here (none for now)
@@ -80,35 +81,34 @@ void generate_cars(Board* board) {
             }
         for (int l = 0; l<board->roads[r].lanes; l++) { // l for lanes
             Car* current_car = &(board->roads[r].cars[l]);
-            current_car->posx = rand() % board->width-1;
+            current_car->length = board->car_length;
+            current_car->posx = (rand() % (board->width-current_car->length-2))+1;
             current_car->color = (Color)(rand() % 4) + 1;
-            current_car->length = 3;
             current_car->direction = ((rand() % 2) == 0 ? 1 : -1);
         }
     }
+}
+
+void clear_car(Board* board,int road, int lane,  Car* current_car) {  
+            wattron(board->window, COLOR_PAIR(0));
+            for (int len = 0; len<current_car->length; len++) {
+               mvwprintw(board->window, board->roads[road].posy+lane+1, current_car->posx+len, " "); 
+            }
+            wattroff(board->window, COLOR_PAIR(0));
 }
 
 void move_cars(Board* board) {
    for (int r = 0; r<board->road_amount; r++) {
        for (int l = 0; l<board->roads[r].lanes; l++) {
             Car* current_car = &(board->roads[r].cars[l]);
+            clear_car(board, r, l, current_car);
             current_car->posx += current_car->direction;
-            if (current_car->posx <= 1 || current_car->posx >= board->width-1-current_car->length) {
-                current_car->direction *= -1;
+            if (current_car->posx <= 1) {
+                current_car->direction = 1;
+            } else if (current_car->posx >= (board->width-current_car->length)-1){
+                current_car->direction = -1;
             }
-        }
-    }
-}
 
-void clear_car(Board* board) {  
-    for (int r = 0; r<board->road_amount; r++) { // r for road    
-        for (int l = 0; l<board->roads[r].lanes; l++) { // l for lanes
-            Car current_car = board->roads[r].cars[l];
-            wattron(board->window, COLOR_PAIR(0));
-            for (int len = 0; len<current_car.length; len++) {
-               mvwprintw(board->window, board->roads[r].posy+l+1, current_car.posx+len, " "); 
-            }
-            wattroff(board->window, COLOR_PAIR(0));
         }
     }
 }

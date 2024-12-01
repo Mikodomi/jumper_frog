@@ -42,11 +42,16 @@ void handle_movement(Board* board, char input) {
 
 void main_loop(Board* board) {
     draw_frog(board);
-    wtimeout(board->window,16);
+    wtimeout(board->window,17);
     int w;
+    int tick_counter = 0;
     while (w != KEY_F(1)){
+        tick_counter = (tick_counter + 1) % board->tick_speed;
         w = wgetch(board->window);
         clear_frog(board);
+        if (tick_counter == 0) {
+            move_cars(board);
+        }
         handle_movement(board, w);
         draw_roads(board);
         draw_cars(board);

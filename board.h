@@ -40,6 +40,7 @@ typedef struct board_t {
     int car_length;
     int road_amount;
     Road* roads;
+    int tick_speed;
 } Board;
 
 
@@ -60,7 +61,6 @@ void draw_roads(Board* board);
 
 void generate_cars(Board* board);
 void move_cars(Board* board);
-void clear_car(Board* board);
 void draw_cars(Board* board);
 
 // CLEANING

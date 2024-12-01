@@ -49,6 +49,21 @@ parseError roads_parse(Board* board, FILE* file) {
     return PARSE_SUCCESS;
 }
 
+parseError cars_parse(Board* board, FILE* file) {
+    char buffer[32];
+    int value;
+    for (int i = 0; i<2; i++) {
+        fscanf(file, "%s %d ", buffer, &value);
+        if (strcmp(buffer, "length") == 0) {
+            board->car_length = value;
+        }
+        if (strcmp(buffer, "tick_speed") == 0) {
+            board->tick_speed = value;
+        }
+    }
+    return PARSE_SUCCESS;
+}
+
 void parse_config(Board* board) {
     FILE* file = fopen("config.txt", "r");
     if (file == NULL) return; // default board is given for this case
@@ -61,6 +76,9 @@ void parse_config(Board* board) {
         }
         if (strcmp(command, "ROADS") == 0) {
             roads_parse(board, file);
+        }
+        if (strcmp(command, "CARS") == 0) {
+            cars_parse(board, file);
         }
     }
     fclose(file);

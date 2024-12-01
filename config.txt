@@ -3,3 +3,6 @@ ROADS
 2 2
 20 5
 
+CARS
+length 5
+tick_speed 3
