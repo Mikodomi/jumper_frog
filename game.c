@@ -15,12 +15,12 @@ void draw_board(Board* board) {
     wrefresh(board->window);
 }
 
-void handle_movement(Board* board, char input) {
+int handle_movement(Board* board, char input) {
     switch(input) {
         case 'w':
         case 'k':
             board->frog.posy--;
-            if (board->frog.posy <= 0) board->frog.posy++;
+            if (board->frog.posy <= 0) return 1;
             break;
         case 's':
         case 'j':
@@ -38,6 +38,21 @@ void handle_movement(Board* board, char input) {
             if (board->frog.posx >= board->width-1) board->frog.posx--;
             break;
     }
+    return 0;
+}
+
+int is_colliding(Board* board) {
+    for (int r = 0; r<board->road_amount; r++)  {
+        for (int l = 0; l<board->roads[r].lanes; l++) {
+            Car current_car = board->roads[r].cars[l];
+            if (board->roads[r].posy+l+1 == board->frog.posy) {
+                if (board->frog.posx >= current_car.posx &&  board->frog.posx <= current_car.posx+current_car.length) {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
 }
 
 void main_loop(Board* board) {
@@ -49,10 +64,11 @@ void main_loop(Board* board) {
         tick_counter = (tick_counter + 1) % board->tick_speed;
         w = wgetch(board->window);
         clear_frog(board);
+        if (handle_movement(board, w)) break;
         if (tick_counter == 0) {
             move_cars(board);
         }
-        handle_movement(board, w);
+        if (is_colliding(board)) break;
         draw_roads(board);
         draw_cars(board);
         draw_frog(board);
