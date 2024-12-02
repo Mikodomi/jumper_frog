@@ -16,16 +16,11 @@ void default_board(Board* board) {
     board->tick_speed = 3;
 }
 
-//config functions here (none for now)
-//...
-// ----- 
-
-
 
 void make_board_wins(Board* board) {
     parse_config(board);
     board->window = newwin(board->height, board->width, 0, 0);
-    board->status = newwin(10, 30, 0, 0);
+    board->status = newwin(5, 25, 0, board->width+1);
     generate_cars(board);
 }
 
@@ -128,5 +123,10 @@ void draw_cars(Board* board) {
 }
 
 void free_board(Board* board) {
+    for (int r = 0; r<board->road_amount; r++) {
+        free(board->roads[r].cars);
+    }
     free(board->roads);
+    delwin(board->window);
+    delwin(board->status);
 }

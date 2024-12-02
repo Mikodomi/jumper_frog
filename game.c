@@ -16,8 +16,11 @@ Board init_game() {
 
 void draw_board(Board* board) {
     box(board->window, 0, 0);
+    box(board->status, 0, 0);
     wprintw(board->window, "frogger");
+    wprintw(board->status, "Status");
     wrefresh(board->window);
+    wrefresh(board->status);
 }
 
 gameStatus handle_movement(Board* board, char input) {
@@ -78,8 +81,9 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         draw_roads(board);
         draw_cars(board);
         draw_frog(board);
-        mvwprintw(board->window, 0, 0, "%.2lf", (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC));
+        mvwprintw(board->status, 2, 2, "Time elapsed: %.2lf", (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC));
         wrefresh(board->window);
+        wrefresh(board->status);
     } 
     // user must have pressed f1
     return EXIT; 
