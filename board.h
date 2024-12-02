@@ -33,6 +33,7 @@ typedef struct road_t {
 
 typedef struct board_t {
     WINDOW* window;
+    WINDOW* status;
     int height;
     int width;
     Frog frog;
@@ -45,7 +46,7 @@ typedef struct board_t {
 
 
 void default_board(Board* board);
-void make_board_win(Board* board);
+void make_board_wins(Board* board);
 void make_color_pairs();
 
 // FROG FUNCTIONS

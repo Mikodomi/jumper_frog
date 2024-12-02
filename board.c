@@ -22,9 +22,10 @@ void default_board(Board* board) {
 
 
 
-void make_board_win(Board* board) {
+void make_board_wins(Board* board) {
     parse_config(board);
     board->window = newwin(board->height, board->width, 0, 0);
+    board->status = newwin(10, 30, 0, 0);
     generate_cars(board);
 }
 

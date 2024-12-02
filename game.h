@@ -2,9 +2,16 @@
 #define MAIN_GAME_FROGGER_H
 #include "board.h"
 
+typedef enum game_status_enum {
+    VICTORY,
+    ONGOING,
+    DEFEAT,
+    EXIT,
+} gameStatus;
+
 void draw_board(Board* board);
 Board init_game();
-void main_loop(Board* board);
+gameStatus main_loop(Board* board);
 
 
 #endif

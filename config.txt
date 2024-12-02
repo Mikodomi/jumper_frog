@@ -1,8 +1,7 @@
 ROADS
-2
-2 2
-20 5
+1
+2 20
 
 CARS
-length 5
-tick_speed 3
+length 3
+tick_speed 4
