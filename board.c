@@ -6,7 +6,7 @@
 
 void default_board(Board* board) {
     board->height = 30;
-    board->width = 30;
+    board->width = 50;
     board->frog.size = 1;
     board->frog.posx = board->width/2;
     board->frog.posy = board->height-2;
@@ -14,6 +14,8 @@ void default_board(Board* board) {
     board->car_length = 3;
     board->road_amount = 0;
     board->tick_speed = 3;
+    board->disappear_chance = 90;
+    board->switch_chance = 50;
 }
 
 
@@ -99,12 +101,33 @@ void move_cars(Board* board) {
             Car* current_car = &(board->roads[r].cars[l]);
             clear_car(board, r, l, current_car);
             current_car->posx += current_car->direction;
-            if (current_car->posx <= 1) {
-                current_car->direction = 1;
-            } else if (current_car->posx >= (board->width-current_car->length)-1){
-                current_car->direction = -1;
+            int roll = rand() % 100; // for determining if the car bounces off the wall
+                                    // or (eventually) wraps around the other side
+            if (current_car->posx == 1) {
+                if (roll < 100-board->disappear_chance) {
+                    current_car->direction = 1;
+                }
+            } else if (current_car->posx == (board->width-current_car->length)-1){
+                if (roll < 100-board->disappear_chance) {
+                    current_car->direction = -1;
+                }
             }
-
+            // wrapping or switching
+            if (current_car->posx < -1) {
+                if (roll <= 100-board->switch_chance) {
+                    current_car->posx = board->width+1; 
+                } else {
+                    current_car->color = (Color)(rand() % 4) + 1;
+                    current_car->direction = 1;
+                }
+            } else if (current_car->posx > board->width+1) {
+                if (roll <= 100-board->switch_chance) {
+                    current_car->posx = -1; 
+                } else {
+                    current_car->color = (Color)(rand() % 4) + 1;
+                    current_car->direction = -1;
+                }
+            }
         }
     }
 }

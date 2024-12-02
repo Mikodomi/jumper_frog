@@ -50,15 +50,23 @@ parseError roads_parse(Board* board, FILE* file) {
 }
 
 parseError cars_parse(Board* board, FILE* file) {
+    int amount; // amont of commands
+    fscanf(file, "%d ", &amount);
     char buffer[32];
     int value;
-    for (int i = 0; i<2; i++) {
+    for (int i = 0; i<amount; i++) {
         fscanf(file, "%s %d ", buffer, &value);
         if (strcmp(buffer, "length") == 0) {
             board->car_length = value;
         }
         if (strcmp(buffer, "tick_speed") == 0) {
             board->tick_speed = value;
+        }
+        if (strcmp(buffer, "disappear_chance") == 0) {
+            board->disappear_chance = value;
+        }
+        if (strcmp(buffer, "switch_chance") == 0) {
+            board->switch_chance = value;
         }
     }
     return PARSE_SUCCESS;

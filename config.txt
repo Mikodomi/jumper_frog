@@ -3,5 +3,8 @@ ROADS
 2 20
 
 CARS
+4
 length 3
 tick_speed 4
+disappear_chance 90
+switch_chance 50

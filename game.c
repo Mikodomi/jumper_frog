@@ -17,8 +17,8 @@ Board init_game() {
 void draw_board(Board* board) {
     box(board->window, 0, 0);
     box(board->status, 0, 0);
-    wprintw(board->window, "frogger");
-    wprintw(board->status, "Status");
+    mvwprintw(board->window,0, 0, "frogger");
+    mvwprintw(board->status,0, 0, "Status");
     wrefresh(board->window);
     wrefresh(board->status);
 }
@@ -70,6 +70,7 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
     int tick_counter = 0;
     clock_t start = clock();
     while (w != KEY_F(1)){
+        draw_board(board);
         tick_counter = (tick_counter + 1) % board->tick_speed;
         w = wgetch(board->window);
         clear_frog(board);

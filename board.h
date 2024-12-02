@@ -42,6 +42,12 @@ typedef struct board_t {
     int road_amount;
     Road* roads;
     int tick_speed;
+    int disappear_chance; // into the border
+    int switch_chance; // switch to be a different color and go back instead of wrap
+                       // by extension, the chance to wrap around the map is 100% - switch_chance%
+                       // warning: this probability stacks with the disappear_chance
+                       // so overall probability for a car to do this is (disappear_chance*switch_chance)/100^2 (small)
+                       // make this pretty big
 } Board;
 
 
