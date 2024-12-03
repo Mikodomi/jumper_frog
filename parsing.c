@@ -72,6 +72,23 @@ parseError cars_parse(Board* board, FILE* file) {
     return PARSE_SUCCESS;
 }
 
+parseError obstacles_parse(Board* board, FILE* file) {
+    int amount; // amount of obstacles
+    fscanf(file, "%d ", &amount);
+    for (int i = 0; i<amount; i++) {
+        int x, y;
+        int status = fscanf(file, "%d %d ", &x, &y);
+        switch (status) {
+            case EOF:
+                return PARSE_EOF;
+            case 0:
+                return PARSE_ERROR;
+        }
+        board->obstacles[y*board->width+x] = 1;
+    }
+    return PARSE_SUCCESS;
+}
+
 void parse_config(Board* board) {
     FILE* file = fopen("config.txt", "r");
     if (file == NULL) return; // default board is given for this case
@@ -87,6 +104,9 @@ void parse_config(Board* board) {
         }
         if (strcmp(command, "CARS") == 0) {
             cars_parse(board, file);
+        }
+        if (strcmp(command, "OBSTACLES") == 0) {
+            obstacles_parse(board, file);
         }
     }
     fclose(file);

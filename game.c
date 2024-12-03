@@ -14,6 +14,16 @@ Board init_game() {
     return map;
 }
 
+void print_obstacles(Board* board) {
+    for (int h = 0; h<board->height; h++) {
+        for (int w = 0; w<board->width; w++) {
+            if (board->obstacles[(h*board->width)+w]) {
+                mvwprintw(board->window, h, w, "&");
+            }
+        }
+    }
+}
+
 void draw_board(Board* board) {
     box(board->window, 0, 0);
     box(board->status, 0, 0);
@@ -23,7 +33,13 @@ void draw_board(Board* board) {
     wrefresh(board->status);
 }
 
+int frog_obstacle_collision(Board* board) {
+    return board->obstacles[(board->frog.posy*board->width)+board->frog.posx];
+}
+
 gameStatus handle_movement(Board* board, char input) {
+    int old_posy = board->frog.posy;
+    int old_posx = board->frog.posx;
     switch(input) {
         case 'w':
         case 'k':
@@ -46,6 +62,10 @@ gameStatus handle_movement(Board* board, char input) {
             if (board->frog.posx >= board->width-1) board->frog.posx--;
             break;
     }
+    if (frog_obstacle_collision(board)) {
+        board->frog.posx = old_posx;
+        board->frog.posy = old_posy;
+    }
     return ONGOING;
 }
 
@@ -63,12 +83,17 @@ int is_colliding(Board* board) {
     return ONGOING;
 }
 
+int car_obstacle_collision(Board* board) { 
+
+}
+
 gameStatus main_loop(Board* board) { // will never return ONGOING (because that means the game.. is ongoing...)
     draw_frog(board);
     wtimeout(board->window,(1000/FPS));
     int w;
     int tick_counter = 0;
     clock_t start = clock();
+    print_obstacles(board);
     while (w != KEY_F(1)){
         draw_board(board);
         tick_counter = (tick_counter + 1) % board->tick_speed;

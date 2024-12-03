@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+void fill_obstacles_matrix(Board* board);
 
 void default_board(Board* board) {
     board->height = 30;
@@ -16,6 +17,16 @@ void default_board(Board* board) {
     board->tick_speed = 3;
     board->disappear_chance = 90;
     board->switch_chance = 50;
+    board->obstacles = (int*)malloc(sizeof(int)*board->height*board->width);
+    fill_obstacles_matrix(board);
+}
+
+void fill_obstacles_matrix(Board* board) {
+    for (int h = 0; h<board->height; h++) {
+        for (int w = 0; w<board->width; w++) {
+            board->obstacles[(h*board->width)+w] = 0;
+        }
+    }
 }
 
 
@@ -71,7 +82,6 @@ void draw_roads(Board* board) {
 
 
 void generate_cars(Board* board) {
-    printw("segfault");
     for (int r = 0; r<board->road_amount; r++) { // r for road    
         board->roads[r].cars = (Car*)malloc(board->roads[r].lanes*sizeof(Car));
             if (board->roads[r].cars == NULL) {
@@ -95,6 +105,25 @@ void clear_car(Board* board,int road, int lane,  Car* current_car) {
             wattroff(board->window, COLOR_PAIR(0));
 }
 
+void wrap_or_switch(Board* board, Car* current_car, int roll) {
+            if (current_car->posx < -1) {
+                if (roll <= 100-board->switch_chance) {
+                    current_car->posx = board->width+1; 
+                } else {
+                    current_car->color = (Color)(rand() % 4) + 1;
+                    current_car->direction = 1;
+                }
+            } else if (current_car->posx > board->width+1) {
+                if (roll <= 100-board->switch_chance) {
+                    current_car->posx = -1; 
+                } else {
+                    current_car->color = (Color)(rand() % 4) + 1;
+                    current_car->direction = -1;
+                }
+            }
+}
+
+
 void move_cars(Board* board) {
    for (int r = 0; r<board->road_amount; r++) {
        for (int l = 0; l<board->roads[r].lanes; l++) {
@@ -113,21 +142,7 @@ void move_cars(Board* board) {
                 }
             }
             // wrapping or switching
-            if (current_car->posx < -1) {
-                if (roll <= 100-board->switch_chance) {
-                    current_car->posx = board->width+1; 
-                } else {
-                    current_car->color = (Color)(rand() % 4) + 1;
-                    current_car->direction = 1;
-                }
-            } else if (current_car->posx > board->width+1) {
-                if (roll <= 100-board->switch_chance) {
-                    current_car->posx = -1; 
-                } else {
-                    current_car->color = (Color)(rand() % 4) + 1;
-                    current_car->direction = -1;
-                }
-            }
+            wrap_or_switch(board, current_car, roll);
         }
     }
 }
@@ -150,6 +165,7 @@ void free_board(Board* board) {
         free(board->roads[r].cars);
     }
     free(board->roads);
+    free(board->obstacles);
     delwin(board->window);
     delwin(board->status);
 }

@@ -31,6 +31,12 @@ typedef struct road_t {
     Car* cars;
 } Road;
 
+typedef struct obstacle_matrix_type {
+    int* obstacles;
+    int height;
+    int width; // i don't know the proper matrix terminology
+} ObstacleMatrix;
+
 typedef struct board_t {
     WINDOW* window;
     WINDOW* status;
@@ -48,6 +54,7 @@ typedef struct board_t {
                        // warning: this probability stacks with the disappear_chance
                        // so overall probability for a car to do this is (disappear_chance*switch_chance)/100^2 (small)
                        // make this pretty big
+    int* obstacles;
 } Board;
 
 
