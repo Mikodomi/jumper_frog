@@ -18,6 +18,7 @@ void default_board(Board* board) {
     board->disappear_chance = 90;
     board->switch_chance = 50;
     board->obstacles = (int*)malloc(sizeof(int)*board->height*board->width);
+    board->can_boost = 0;
     fill_obstacles_matrix(board);
 }
 
@@ -136,6 +137,7 @@ int frog_proximity(Board* board, int posy, int lane, Car* current_car) { // used
 }
 
 void move_cars(Board* board, int tick_count) {
+    board->can_boost = 0;
     for (int r = 0; r<board->road_amount; r++) {
         for (int l = 0; l<board->roads[r].lanes; l++) {
             Car* current_car = &(board->roads[r].cars[l]);
@@ -144,6 +146,10 @@ void move_cars(Board* board, int tick_count) {
             }
             if (frog_proximity(board, board->roads[r].posy, l, current_car) && current_car->color == BLUE) {
                 continue;
+            }
+            
+            if (frog_proximity(board, board->roads[r].posy, l, current_car) && current_car->color == GREEN) {
+                board->can_boost = board->roads[r].posy;
             }
             int oldx = current_car->posx;
             clear_car(board, r, l, current_car);

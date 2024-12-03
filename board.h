@@ -54,6 +54,7 @@ typedef struct board_t {
                        // warning: this probability stacks with the disappear_chance
                        // so overall probability for a car to do this is (disappear_chance*switch_chance)/100^2 (small)
                        // make this pretty big
+    int can_boost;
     int* obstacles;
 } Board;
 
@@ -77,6 +78,7 @@ int car_obstacle_collision(Board* board, int posy, int l, Car* current_car);
 void generate_cars(Board* board);
 void move_cars(Board* board, int tick_count);
 void draw_cars(Board* board);
+int frog_proximity(Board* board, int posy, int l, Car* current_car);
 
 // CLEANING
 

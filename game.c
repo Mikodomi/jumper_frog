@@ -61,6 +61,12 @@ gameStatus handle_movement(Board* board, char input) {
             board->frog.posx++;
             if (board->frog.posx >= board->width-1) board->frog.posx--;
             break;
+        case 'b':
+            if (board->can_boost) {
+                board->frog.posy = board->can_boost;
+                board->can_boost = 0;
+            }
+            break;
     }
     if (frog_obstacle_collision(board)) {
         board->frog.posx = old_posx;
@@ -107,7 +113,7 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         draw_cars(board);
         draw_frog(board);
         time_elapsed = (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC);
-        if (time_elapsed > 30 && speed_change) {
+        if (time_elapsed > 3 && speed_change) {
             board->tick_speed--;
             speed_change = 0;
         }
