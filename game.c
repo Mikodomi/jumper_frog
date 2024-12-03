@@ -107,7 +107,7 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         draw_cars(board);
         draw_frog(board);
         time_elapsed = (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC);
-        if (time_elapsed > 5 && speed_change) {
+        if (time_elapsed > 30 && speed_change) {
             board->tick_speed--;
             speed_change = 0;
         }

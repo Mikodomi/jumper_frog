@@ -129,11 +129,20 @@ int car_obstacle_collision(Board* board, int posy, int lane, Car* current_car) {
     return board->obstacles[((posy+lane)*board->width)+current_car->posx] || board->obstacles[((posy+lane)*board->width)+current_car->posx+current_car->length]; // BEAST but saves space overall
 }
 
+int frog_proximity(Board* board, int posy, int lane, Car* current_car) { // used for 2 car types
+    return (board->frog.posx >= current_car->posx) &&
+           (board->frog.posx <= current_car->posx + current_car->length) &&
+           ((board->frog.posy-2 == posy+lane) || board->frog.posy == posy+lane);
+}
+
 void move_cars(Board* board, int tick_count) {
     for (int r = 0; r<board->road_amount; r++) {
         for (int l = 0; l<board->roads[r].lanes; l++) {
             Car* current_car = &(board->roads[r].cars[l]);
             if (tick_count == 0 && current_car->color != RED) {
+                continue;
+            }
+            if (frog_proximity(board, board->roads[r].posy, l, current_car) && current_car->color == BLUE) {
                 continue;
             }
             int oldx = current_car->posx;
