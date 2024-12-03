@@ -90,7 +90,9 @@ void generate_cars(Board* board) {
         for (int l = 0; l<board->roads[r].lanes; l++) { // l for lanes
             Car* current_car = &(board->roads[r].cars[l]);
             current_car->length = board->car_length;
+            do {
             current_car->posx = (rand() % (board->width-current_car->length-2))+1;
+            } while (car_obstacle_collision(board, board->roads[r].posy+1,l,current_car));
             current_car->color = (Color)(rand() % 4) + 1;
             current_car->direction = ((rand() % 2) == 0 ? 1 : -1);
         }
@@ -123,11 +125,15 @@ void wrap_or_switch(Board* board, Car* current_car, int roll) {
             }
 }
 
+int car_obstacle_collision(Board* board, int posy, int lane, Car* current_car) { 
+    return board->obstacles[((posy+lane)*board->width)+current_car->posx] || board->obstacles[((posy+lane)*board->width)+current_car->posx+current_car->length]; // BEAST but saves space overall
+}
 
 void move_cars(Board* board) {
    for (int r = 0; r<board->road_amount; r++) {
        for (int l = 0; l<board->roads[r].lanes; l++) {
             Car* current_car = &(board->roads[r].cars[l]);
+            int oldx = current_car->posx;
             clear_car(board, r, l, current_car);
             current_car->posx += current_car->direction;
             int roll = rand() % 100; // for determining if the car bounces off the wall
@@ -140,6 +146,10 @@ void move_cars(Board* board) {
                 if (roll < 100-board->disappear_chance) {
                     current_car->direction = -1;
                 }
+            }
+            if (car_obstacle_collision(board, board->roads[r].posy+1, l, current_car)) {
+                current_car->posx = oldx;
+                current_car->direction *= -1;
             }
             // wrapping or switching
             wrap_or_switch(board, current_car, roll);

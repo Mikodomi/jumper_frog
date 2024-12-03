@@ -84,7 +84,7 @@ parseError obstacles_parse(Board* board, FILE* file) {
             case 0:
                 return PARSE_ERROR;
         }
-        board->obstacles[y*board->width+x] = 1;
+        board->obstacles[(y+1)*board->width+x] = 1;
     }
     return PARSE_SUCCESS;
 }

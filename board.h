@@ -73,6 +73,7 @@ void draw_roads(Board* board);
 
 // CAR FUNCTIONS
 
+int car_obstacle_collision(Board* board, int posy, int l, Car* current_car);
 void generate_cars(Board* board);
 void move_cars(Board* board);
 void draw_cars(Board* board);

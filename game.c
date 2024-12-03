@@ -83,9 +83,6 @@ int is_colliding(Board* board) {
     return ONGOING;
 }
 
-int car_obstacle_collision(Board* board) { 
-
-}
 
 gameStatus main_loop(Board* board) { // will never return ONGOING (because that means the game.. is ongoing...)
     draw_frog(board);
@@ -93,9 +90,9 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
     int w;
     int tick_counter = 0;
     clock_t start = clock();
-    print_obstacles(board);
     while (w != KEY_F(1)){
         draw_board(board);
+        print_obstacles(board);
         tick_counter = (tick_counter + 1) % board->tick_speed;
         w = wgetch(board->window);
         clear_frog(board);

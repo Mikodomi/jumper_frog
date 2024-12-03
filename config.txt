@@ -1,6 +1,6 @@
 ROADS
 1
-2 1
+1 5
 
 CARS
 4
@@ -10,5 +10,9 @@ disappear_chance 90
 switch_chance 50
 
 OBSTACLES
-1
-5 5
+5
+5 2
+6 2
+7 2 
+8 2
+9 2
