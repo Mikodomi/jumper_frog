@@ -129,15 +129,18 @@ int car_obstacle_collision(Board* board, int posy, int lane, Car* current_car) {
     return board->obstacles[((posy+lane)*board->width)+current_car->posx] || board->obstacles[((posy+lane)*board->width)+current_car->posx+current_car->length]; // BEAST but saves space overall
 }
 
-void move_cars(Board* board) {
-   for (int r = 0; r<board->road_amount; r++) {
-       for (int l = 0; l<board->roads[r].lanes; l++) {
+void move_cars(Board* board, int tick_count) {
+    for (int r = 0; r<board->road_amount; r++) {
+        for (int l = 0; l<board->roads[r].lanes; l++) {
             Car* current_car = &(board->roads[r].cars[l]);
+            if (tick_count == 0 && current_car->color != RED) {
+                continue;
+            }
             int oldx = current_car->posx;
             clear_car(board, r, l, current_car);
             current_car->posx += current_car->direction;
             int roll = rand() % 100; // for determining if the car bounces off the wall
-                                    // or (eventually) wraps around the other side
+                                     // or (eventually) wraps around the other side
             if (current_car->posx == 1) {
                 if (roll < 100-board->disappear_chance) {
                     current_car->direction = 1;

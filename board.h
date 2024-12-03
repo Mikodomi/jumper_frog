@@ -75,7 +75,7 @@ void draw_roads(Board* board);
 
 int car_obstacle_collision(Board* board, int posy, int l, Car* current_car);
 void generate_cars(Board* board);
-void move_cars(Board* board);
+void move_cars(Board* board, int tick_count);
 void draw_cars(Board* board);
 
 // CLEANING

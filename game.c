@@ -90,6 +90,8 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
     int w;
     int tick_counter = 0;
     clock_t start = clock();
+    double time_elapsed;
+    int speed_change = 1;
     while (w != KEY_F(1)){
         draw_board(board);
         print_obstacles(board);
@@ -97,14 +99,19 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         w = wgetch(board->window);
         clear_frog(board);
         if (handle_movement(board, w) == VICTORY) return VICTORY;
-        if (tick_counter == 0) {
-            move_cars(board);
+        if (tick_counter == 0 || tick_counter == (board->tick_speed)/2) {
+            move_cars(board, tick_counter);
         }
         if (is_colliding(board) == DEFEAT) return DEFEAT;
         draw_roads(board);
         draw_cars(board);
         draw_frog(board);
-        mvwprintw(board->status, 2, 2, "Time elapsed: %.2lf", (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC));
+        time_elapsed = (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC);
+        if (time_elapsed > 5 && speed_change) {
+            board->tick_speed--;
+            speed_change = 0;
+        }
+        mvwprintw(board->status, 2, 2, "Time elapsed: %.2lf", time_elapsed);
         wrefresh(board->window);
         wrefresh(board->status);
     } 
