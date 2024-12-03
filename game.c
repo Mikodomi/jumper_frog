@@ -1,10 +1,12 @@
 #include "board.h"
 #include "game.h"
 #include <time.h>
+#include <math.h>
 
 #define FPS 60
 #define MILLISECONDS 1000
 #define FRAMES MILLISECONDS/FPS
+#define PI 3.14159265
 
 Board init_game() {
     Board map;
@@ -44,7 +46,14 @@ gameStatus handle_movement(Board* board, char input) {
         case 'w':
         case 'k':
             board->frog.posy--;
-            if (board->frog.posy <= 0) return VICTORY;  //reached top of the screen - frog has won
+            if (board->frog.posy <= 0) {
+                board->score += 10;
+                return VICTORY;  //reached top of the screen - frog has won
+            }
+            if (board->frog.posy < board->frog.topy) {
+                board->move_score++;
+                board->frog.topy--;
+            }
             break;
         case 's':
         case 'j':
@@ -89,6 +98,18 @@ int is_colliding(Board* board) {
     return ONGOING;
 }
 
+void calculate_score(Board* board, double time) {
+    board->time_score = ((PI/2)-atan((0.3*time)-2))*34 + 10; // converting to arcctg (polish verion)
+    board->score = (int)(board->time_score) + board->move_score;
+}
+
+void clear_status(Board* board) {
+    for (int i = 2; i<4; i++) {
+        for (int j = 2; j<15; j++) {
+            mvwprintw(board->status, i, j, " ");
+        }
+    }
+}
 
 gameStatus main_loop(Board* board) { // will never return ONGOING (because that means the game.. is ongoing...)
     draw_frog(board);
@@ -113,14 +134,44 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         draw_cars(board);
         draw_frog(board);
         time_elapsed = (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC);
-        if (time_elapsed > 3 && speed_change) {
+        if (time_elapsed > 30 && speed_change) {
             board->tick_speed--;
             speed_change = 0;
         }
+        calculate_score(board, time_elapsed);
+        clear_status(board);
         mvwprintw(board->status, 2, 2, "Time elapsed: %.2lf", time_elapsed);
+        mvwprintw(board->status, 3, 2, "Score: %d", board->score);
         wrefresh(board->window);
         wrefresh(board->status);
+
+
     } 
     // user must have pressed f1
     return EXIT; 
+}
+
+void print_end_screen(Board* board, gameStatus result) {
+    switch (result) {
+        case VICTORY:
+            wattron(board->window, COLOR_PAIR(YELLOW));
+            mvwprintw(board->window, board->height/2, (board->width/2)-3, "  YOU WIN  ");;
+            mvwprintw(board->window, (board->height/2)-1, (board->width/2)-3, "  Score:%d  ", board->score);
+            wattroff(board->window, COLOR_PAIR(YELLOW));
+            break;
+        case DEFEAT:
+            wattron(board->window, COLOR_PAIR(RED));
+            mvwprintw(board->window, board->height/2, (board->width/2)-4, "YOU LOSE");
+            wattroff(board->window, COLOR_PAIR(RED));
+            break;
+        case EXIT:
+            wattron(board->window, COLOR_PAIR(GREEN));
+            mvwprintw(board->window, board->height/2, (board->width/2)-4, "YOU EXIT");
+            wattroff(board->window, COLOR_PAIR(GREEN));
+            break;
+        case ONGOING:
+            //should never happen
+            mvwprintw(board->window, 0, 0, "how did we get here?");
+            break;
+        }
 }

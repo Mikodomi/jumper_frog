@@ -2,6 +2,9 @@
 #include "parsing.h"
 #include <ncurses.h>
 #include <stdlib.h>
+#include <math.h>
+
+#define PI 3.1415926
 
 void fill_obstacles_matrix(Board* board);
 
@@ -11,6 +14,7 @@ void default_board(Board* board) {
     board->frog.size = 1;
     board->frog.posx = board->width/2;
     board->frog.posy = board->height-2;
+    board->frog.topy = board->height-2;
     board->car_amount = 5;
     board->car_length = 3;
     board->road_amount = 0;
@@ -19,6 +23,9 @@ void default_board(Board* board) {
     board->switch_chance = 50;
     board->obstacles = (int*)malloc(sizeof(int)*board->height*board->width);
     board->can_boost = 0;
+    board->score = 0;
+    board->move_score = 0;
+    board->time_score = 100;
     fill_obstacles_matrix(board);
 }
 

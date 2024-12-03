@@ -8,6 +8,7 @@ typedef struct frog_t {
     int size; // a radius
               // e.g. size = 1 is 1x1
               // but size = 2 is 3x3, because the "radius" from the center is 2
+    int topy;
 } Frog;
 
 typedef enum color_en {
@@ -55,6 +56,9 @@ typedef struct board_t {
                        // so overall probability for a car to do this is (disappear_chance*switch_chance)/100^2 (small)
                        // make this pretty big
     int can_boost;
+    int score;
+    double time_score;
+    int move_score;
     int* obstacles;
 } Board;
 
