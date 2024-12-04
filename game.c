@@ -8,11 +8,11 @@
 #define FRAMES MILLISECONDS/FPS
 #define PI 3.14159265
 
-Board init_game() {
+Board init_game(char* level) {
     Board map;
     make_color_pairs();
     default_board(&map);
-    make_board_wins(&map);
+    make_board_wins(&map, level);
     return map;
 }
 
@@ -123,7 +123,7 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
     double time_elapsed;
     int speed_change = 1;
     int stork_count = 0;
-    while (w != KEY_F(1)){
+    while (w != 'q'){
         draw_board(board);
         print_obstacles(board);
         tick_counter = (tick_counter + 1) % board->tick_speed;
@@ -183,4 +183,25 @@ void print_end_screen(Board* board, gameStatus result) {
             mvwprintw(board->window, 0, 0, "how did we get here?");
             break;
         }
+    wrefresh(board->window);
+    double waiter = clock() + CLOCKS_PER_SEC*3; // 3 second timer
+    while (clock() < waiter) {}
+}
+
+void game_levels() {
+    Board board = init_game("config.txt");
+    draw_board(&board);
+    gameStatus result = main_loop(&board);
+    print_end_screen(&board, result);
+
+
+    board = init_game("level2.txt");
+    draw_board(&board);
+    result = main_loop(&board);
+    print_end_screen(&board, result);
+
+    wrefresh(board.window);
+    free_board(&board);
+
+
 }

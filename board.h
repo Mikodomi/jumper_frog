@@ -66,7 +66,7 @@ typedef struct board_t {
 
 
 void default_board(Board* board);
-void make_board_wins(Board* board);
+void make_board_wins(Board* board, char* level);
 void make_color_pairs();
 
 // FROG FUNCTIONS

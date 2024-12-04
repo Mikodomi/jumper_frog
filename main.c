@@ -9,10 +9,9 @@ int main() {
     noecho();
     curs_set(0);
     start_color();
-
-    refresh();
-    Board map = init_game();
+    Board map = init_game("config.txt");
     keypad(map.window, TRUE);
+    game_levels(&map);
     draw_board(&map);
     gameStatus result = main_loop(&map);
     print_end_screen(&map, result);

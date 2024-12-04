@@ -89,8 +89,22 @@ parseError obstacles_parse(Board* board, FILE* file) {
     return PARSE_SUCCESS;
 }
 
-void parse_config(Board* board) {
-    FILE* file = fopen("config.txt", "r");
+parseError stork_parse(Board* board, FILE* file) {
+    char buffer[32];
+    int speed;
+    int status = fscanf(file, "%s %d ", buffer, &speed);
+    switch (status) {
+        case EOF:
+            return PARSE_EOF;
+        case 0:
+            return PARSE_ERROR;
+        }
+    board->stork.speed = speed;
+    return PARSE_SUCCESS;
+}
+
+void parse_config(Board* board, char* level) {
+    FILE* file = fopen(level, "r");
     if (file == NULL) return; // default board is given for this case
     char buffer[32];
     while(fgets(buffer, 32, file) != NULL) { // expects newline character after the main command (e.g. "FROG\nsize"...)
@@ -107,6 +121,9 @@ void parse_config(Board* board) {
         }
         if (strcmp(command, "OBSTACLES") == 0) {
             obstacles_parse(board, file);
+        }
+        if (strcmp(command, "STORK") == 0) {
+            stork_parse(board, file);
         }
     }
     fclose(file);

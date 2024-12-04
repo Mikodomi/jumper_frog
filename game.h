@@ -10,8 +10,9 @@ typedef enum game_status_enum {
 } gameStatus;
 
 void draw_board(Board* board);
-Board init_game();
+Board init_game(char* level);
 gameStatus main_loop(Board* board);
 void print_end_screen(Board* board, gameStatus result);
+void game_levels();
 
 #endif

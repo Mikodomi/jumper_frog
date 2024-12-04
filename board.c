@@ -17,7 +17,7 @@ void default_board(Board* board) {
     board->frog.topy = board->height-2;
     board->stork.posx = 1;
     board->stork.posy = 1;
-    board->stork.speed = 20;
+    board->stork.speed = 1000000000;
     board->car_amount = 5;
     board->car_length = 3;
     board->road_amount = 0;
@@ -41,8 +41,8 @@ void fill_obstacles_matrix(Board* board) {
 }
 
 
-void make_board_wins(Board* board) {
-    parse_config(board);
+void make_board_wins(Board* board, char* level) {
+    parse_config(board, level);
     board->window = newwin(board->height, board->width, 0, 0);
     board->status = newwin(5, 25, 0, board->width+1);
     generate_cars(board);
@@ -202,7 +202,7 @@ void draw_cars(Board* board) {
 void move_stork(Board* board) {
     mvwprintw(board->window, board->stork.posy, board->stork.posx, " ");
     if (board->stork.posx != board->frog.posx) {
-            board->stork.posx += (board->frog.posx > board->stork.posx) ? 1 : -1;    
+        board->stork.posx += (board->frog.posx > board->stork.posx) ? 1 : -1;    
     }
     if (board->stork.posy != board->frog.posy) {
         board->stork.posy += (board->frog.posy > board->stork.posy) ? 1 : -1;

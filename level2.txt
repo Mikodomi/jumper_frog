@@ -1,0 +1,6 @@
+ROADS
+1
+5 5
+
+CARS
+tick_speed 4

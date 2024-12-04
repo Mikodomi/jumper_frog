@@ -16,3 +16,6 @@ OBSTACLES
 7 2 
 8 2
 9 2
+
+STORK
+speed 15
