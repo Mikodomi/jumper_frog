@@ -201,8 +201,12 @@ void draw_cars(Board* board) {
 
 void move_stork(Board* board) {
     mvwprintw(board->window, board->stork.posy, board->stork.posx, " ");
-    board->stork.posx += (board->frog.posx > board->stork.posx) ? 1 : -1;    
-    board->stork.posy += (board->frog.posy > board->stork.posy) ? 1 : -1;
+    if (board->stork.posx != board->frog.posx) {
+            board->stork.posx += (board->frog.posx > board->stork.posx) ? 1 : -1;    
+    }
+    if (board->stork.posy != board->frog.posy) {
+        board->stork.posy += (board->frog.posy > board->stork.posy) ? 1 : -1;
+    }
 }
 
 void draw_stork(Board* board) {
