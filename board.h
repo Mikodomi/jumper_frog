@@ -17,6 +17,7 @@ typedef enum color_en {
     RED,
     BLUE,
     YELLOW,
+    MAGENTA,
 } Color;
 
 typedef struct car_t {
@@ -32,11 +33,11 @@ typedef struct road_t {
     Car* cars;
 } Road;
 
-typedef struct obstacle_matrix_type {
-    int* obstacles;
-    int height;
-    int width; // i don't know the proper matrix terminology
-} ObstacleMatrix;
+typedef struct stork_t {
+    int posx;
+    int posy;
+    int speed; // speed = n --> stork moves every n car ticks
+} Stork;
 
 typedef struct board_t {
     WINDOW* window;
@@ -44,6 +45,7 @@ typedef struct board_t {
     int height;
     int width;
     Frog frog;
+    Stork stork;
     int car_amount;
     int car_length;
     int road_amount;
@@ -83,6 +85,11 @@ void generate_cars(Board* board);
 void move_cars(Board* board, int tick_count);
 void draw_cars(Board* board);
 int frog_proximity(Board* board, int posy, int l, Car* current_car);
+
+// STORK FUNCTIONS
+
+void move_stork(Board* board);
+void draw_stork(Board* board);
 
 // CLEANING
 

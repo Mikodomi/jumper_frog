@@ -15,6 +15,9 @@ void default_board(Board* board) {
     board->frog.posx = board->width/2;
     board->frog.posy = board->height-2;
     board->frog.topy = board->height-2;
+    board->stork.posx = 1;
+    board->stork.posy = 1;
+    board->stork.speed = 20;
     board->car_amount = 5;
     board->car_length = 3;
     board->road_amount = 0;
@@ -51,6 +54,7 @@ void make_color_pairs() {
     init_pair(2, COLOR_BLACK, COLOR_RED);
     init_pair(3, COLOR_BLACK, COLOR_BLUE);
     init_pair(4, COLOR_BLACK, COLOR_YELLOW);
+    init_pair(5, COLOR_BLACK, COLOR_MAGENTA);
     //init_pair(2, COLOR_BLACK, COLOR_RED);
     //init_pair(2, COLOR_BLACK, COLOR_RED);
 }
@@ -193,6 +197,18 @@ void draw_cars(Board* board) {
             wattroff(board->window, COLOR_PAIR(current_car.color));
         }
     }
+}
+
+void move_stork(Board* board) {
+    mvwprintw(board->window, board->stork.posy, board->stork.posx, " ");
+    board->stork.posx += (board->frog.posx > board->stork.posx) ? 1 : -1;    
+    board->stork.posy += (board->frog.posy > board->stork.posy) ? 1 : -1;
+}
+
+void draw_stork(Board* board) {
+    wattron(board->window, COLOR_PAIR(MAGENTA));
+    mvwprintw(board->window, board->stork.posy, board->stork.posx, "S");
+    wattroff(board->window, COLOR_PAIR(MAGENTA));
 }
 
 void free_board(Board* board) {

@@ -95,6 +95,9 @@ int is_colliding(Board* board) {
             }
         }
     }
+    if (board->stork.posx == board->frog.posx && board->stork.posy == board->frog.posy) {
+        return DEFEAT;
+    }
     return ONGOING;
 }
 
@@ -119,6 +122,7 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
     clock_t start = clock();
     double time_elapsed;
     int speed_change = 1;
+    int stork_count = 0;
     while (w != KEY_F(1)){
         draw_board(board);
         print_obstacles(board);
@@ -128,11 +132,16 @@ gameStatus main_loop(Board* board) { // will never return ONGOING (because that 
         if (handle_movement(board, w) == VICTORY) return VICTORY;
         if (tick_counter == 0 || tick_counter == (board->tick_speed)/2) {
             move_cars(board, tick_counter);
+            stork_count = (stork_count + 1) % board->stork.speed;
+        }
+        if (stork_count == 0) {
+            move_stork(board);
         }
         if (is_colliding(board) == DEFEAT) return DEFEAT;
         draw_roads(board);
         draw_cars(board);
         draw_frog(board);
+        draw_stork(board);
         time_elapsed = (double)(MILLISECONDS*(clock()-start))/((double)FRAMES*CLOCKS_PER_SEC);
         if (time_elapsed > 30 && speed_change) {
             board->tick_speed--;
